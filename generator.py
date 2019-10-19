@@ -57,7 +57,7 @@ def get_doc_zip():
             sys.stderr.write("Not a directory: {}".format(dirpath))
             sys.exit(1)
         doc_pref = 'pages/'
-        os.system('cd {}; zip -r {} .'.format(dirpath, zip_out, dirpath))
+        os.system('cd {}; git archive -o {} HEAD'.format(dirpath, zip_out))
         with open(zip_out, 'rb') as f:
             ret = f.read()
         def cleanup_zip():
