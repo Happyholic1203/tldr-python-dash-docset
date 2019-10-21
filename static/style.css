@@ -20,6 +20,7 @@ code em {
     margin: 0 0.55em; }
   #tldr #page code {
     font-family: "Source Code Pro", courier new, courier, monospace;
+    white-space: pre-wrap;
     background-color: #f2f2f2;
     color: #212121;
     display: inline-block;
@@ -27,6 +28,7 @@ code em {
     margin: 0; }
   #tldr #page > p code {
     display: block;
+    white-space: pre-wrap;
     padding: 0.55em; }
   #tldr #page ul {
     list-style: none;
