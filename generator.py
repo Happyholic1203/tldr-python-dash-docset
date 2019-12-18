@@ -94,7 +94,7 @@ with zipfile.ZipFile(io.BytesIO(get_doc_zip()), "r") as archive:
                     raise SystemExit
 
             if sub_dir != "common":
-                cur.execute('INSERT OR IGNORE INTO searchIndex(name, type, path) VALUES (?,?,?)', (sub_dir + " " + cmd_name, 'Command', sub_dir+'/'+cmd_name+".html"))
+                cur.execute('INSERT OR IGNORE INTO searchIndex(name, type, path) VALUES (?,?,?)', (sub_dir + ":" + cmd_name, 'Command', sub_dir+'/'+cmd_name+".html"))
             else:
                 cur.execute('INSERT OR IGNORE INTO searchIndex(name, type, path) VALUES (?,?,?)', (cmd_name, 'Command', sub_dir+'/'+cmd_name+".html"))
             doc = markdowner.convert(archive.read(path))
