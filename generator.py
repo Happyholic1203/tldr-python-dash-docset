@@ -10,6 +10,8 @@ import requests as req, zipfile, io, markdown2 as md, sqlite3, os, shutil, tarfi
 p = argparse.ArgumentParser()
 p.add_argument('--url', '-u')
 p.add_argument('--dir', '-d')
+p.add_argument('-k', '--keyword', default='tldr', help='Keyword for search')
+p.add_argument('-t', '--title', default='TLDR Pages', help='Title of this docset')
 args = p.parse_args()
 
 if not any((args.url, args.dir)):
@@ -94,7 +96,7 @@ with zipfile.ZipFile(io.BytesIO(get_doc_zip()), "r") as archive:
                     raise SystemExit
 
             if sub_dir != "common":
-                cur.execute('INSERT OR IGNORE INTO searchIndex(name, type, path) VALUES (?,?,?)', (sub_dir + ":" + cmd_name, 'Command', sub_dir+'/'+cmd_name+".html"))
+                cur.execute('INSERT OR IGNORE INTO searchIndex(name, type, path) VALUES (?,?,?)', (sub_dir + "." + cmd_name, 'Command', sub_dir+'/'+cmd_name+".html"))
             else:
                 cur.execute('INSERT OR IGNORE INTO searchIndex(name, type, path) VALUES (?,?,?)', (cmd_name, 'Command', sub_dir+'/'+cmd_name+".html"))
             doc = markdowner.convert(archive.read(path))
@@ -118,7 +120,12 @@ with open(os.path.join(doc_path, "index.html"), "w+") as html:
 
 # copy static content
 shutil.copyfile("static/style.css", doc_path+"/style.css")
-shutil.copyfile("static/Info.plist", doc_path_contents+"/Info.plist")
+with open(doc_path_contents + '/Info.plist', 'wb') as out:
+    with open('static/Info.plist', 'rb') as f:
+        out.write(
+            f.read().decode().replace(
+                'TITLE', args.title).replace(
+                    'KEYWORD', args.keyword).encode())
 shutil.copyfile("static/icon.png", docset_path+"/icon.png")
 shutil.copyfile("static/icon@2x.png", docset_path+"/icon@2x.png")
 
